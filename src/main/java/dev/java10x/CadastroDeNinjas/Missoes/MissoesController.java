@@ -6,6 +6,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("missoes")
 public class MissoesController {
 
+    private MissoesService missoesService;
+
+    public MissoesController(MissoesService missoesService) {
+        this.missoesService = missoesService;
+    }
+
     // GET -- Mandar uma requisição para mostrar missoes
     @GetMapping("listar")
     public String listarMissoes() {
