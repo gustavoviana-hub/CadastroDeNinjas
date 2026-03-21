@@ -3,6 +3,7 @@ package dev.java10x.CadastroDeNinjas.Ninjas.Controller.Service;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class NinjaService {
@@ -20,7 +21,7 @@ public class NinjaService {
         List<NinjaModel> ninjas = ninjaRepository.findAll();
         return ninjas.stream()
                 .map(ninjaMapper::map)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     // Listar ninja por ID
@@ -43,11 +44,12 @@ public class NinjaService {
 
     // Atualizar ninja
     public NinjaDTO atualizarNinja(Long id, NinjaDTO ninjaDTO) {
-        if (ninjaRepository.existsById(id)) {
-            NinjaModel ninjaModel = ninjaMapper.map(ninjaDTO);
-            ninjaModel.setId(id);
-            NinjaModel salvo = ninjaRepository.save(ninjaModel);
-            return ninjaMapper.map(salvo);
+        Optional<NinjaModel> ninjaExistente = ninjaRepository.findById(id);
+        if (ninjaExistente.isPresent()) {
+            NinjaModel ninjaAtualizado = ninjaMapper.map(ninjaDTO);
+            ninjaAtualizado.setId(id);
+            NinjaModel ninjaSalvo = ninjaRepository.save(ninjaAtualizado);
+            return ninjaMapper.map(ninjaSalvo);
         }
         return null;
     }
